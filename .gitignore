@@ -1,0 +1,25 @@
+# 依赖：本项目零第三方依赖，node_modules 不应存在
+node_modules/
+
+# 无头浏览器临时配置目录（截图时创建，体积大且与代码无关）
+.edge-profile/
+.chrome-profile/
+
+# 运行期日志
+*.log
+npm-debug.log*
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 保留（这些是产物，要入库）：
+#   reports/verification.json  —— 机器可读的验证证据
+#   reports/SUMMARY.md         —— 人可读的验证摘要
+#   shots/*.png                —— 无头浏览器截图
+
+# 工作区记忆/代理状态（个人本地数据，不入公开仓库）
+.workbuddy/

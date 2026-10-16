@@ -1,0 +1,790 @@
+{
+  "project": "ZeroAPI / 巴别塔协议 · 原型验证报告",
+  "generatedAt": "2026-10-16T17:19:19.286Z",
+  "node": "v22.22.2",
+  "platform": "win32 x64",
+  "wallMs": 1815,
+  "summary": {
+    "total": 90,
+    "passed": 90,
+    "failed": 0,
+    "bySuite": [
+      {
+        "suite": "① 最小边界",
+        "total": 22,
+        "pass": 22
+      },
+      {
+        "suite": "② 最大边界",
+        "total": 11,
+        "pass": 11
+      },
+      {
+        "suite": "③ 结构异常",
+        "total": 12,
+        "pass": 12
+      },
+      {
+        "suite": "④ 状态转移陷阱",
+        "total": 14,
+        "pass": 14
+      },
+      {
+        "suite": "⑤ 匹配精度与算子合成",
+        "total": 18,
+        "pass": 18
+      },
+      {
+        "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+        "total": 13,
+        "pass": 13
+      }
+    ]
+  },
+  "e2e": {
+    "steps": [
+      {
+        "name": "三进程启动",
+        "ok": true,
+        "detail": "gateway:8410 modern:8411 legacy:8412"
+      },
+      {
+        "name": "基线：老 ERP 报文形态",
+        "ok": true,
+        "detail": "XML 1067 字节，字段 sp_mc/jg_fen/…"
+      },
+      {
+        "name": "直连模式",
+        "ok": true,
+        "detail": "字段名/单位/编码全部未对齐（这正是前端崩溃的根因）"
+      },
+      {
+        "name": "首次桥接",
+        "ok": true,
+        "detail": "7/7 字段对齐，端到端 3.8ms"
+      },
+      {
+        "name": "胶水代码可取出",
+        "ok": true,
+        "detail": "3936 字节，编译 0.12ms"
+      },
+      {
+        "name": "全链路同步",
+        "ok": true,
+        "detail": "CRM 接收 4 条 ProductDTO"
+      },
+      {
+        "name": "CRM 独立核实",
+        "ok": true,
+        "detail": "ingestCount=1，首条 priceYuan=399.99"
+      },
+      {
+        "name": "CRM 严格性反例",
+        "ok": true,
+        "detail": "字段 isListed 期望 boolean，实际 number（值 1）"
+      },
+      {
+        "name": "自愈基准",
+        "ok": true,
+        "detail": "rename:healed | restyle:healed | unitflip:healed | typeflip:cache-hit | addfield:healed | restyle:healed | hostile:healed | dropfield:healed"
+      },
+      {
+        "name": "恶意改名安全边界",
+        "ok": true,
+        "detail": "priceYuan 被正确判定为不可推断，输出缺省"
+      },
+      {
+        "name": "契约收紧暴露缺口",
+        "ok": true,
+        "detail": "缺少必填字段 brand"
+      },
+      {
+        "name": "反向桥接",
+        "ok": true,
+        "detail": "199.99 元 → 19999 分；ISO → Unix 秒；老 ERP 行数 4→5"
+      },
+      {
+        "name": "时延基准",
+        "ok": true,
+        "detail": "p50 3.0ms / p95 4.0ms"
+      },
+      {
+        "name": "直连对照",
+        "ok": true,
+        "detail": "老 ERP 直连 p50 1.0ms（同一台机器，未经过网关）"
+      },
+      {
+        "name": "并发一致性",
+        "ok": true,
+        "detail": "12 并发全部一致，冷启动重建 1 次"
+      }
+    ],
+    "metrics": {
+      "首次桥接端到端耗时": "3.79 ms",
+      "信封解码耗时": "0.04 ms",
+      "自动生成的胶水代码": "55 行 / 3936 字节",
+      "人手编写的转换代码": "0 行",
+      "结构突变轮次": 8,
+      "本轮触发重建次数": 7,
+      "重建次数上界检查": "≤ 10（实测 7）",
+      "自愈时延 p50": "1.927 ms",
+      "自愈时延 p95": "2.002 ms",
+      "自愈时延 max": "2.621 ms",
+      "缓存命中请求 p50": "3.0 ms",
+      "缓存命中请求 p95": "4.0 ms",
+      "缓存命中请求 max": "4.0 ms",
+      "40 次请求触发的重建次数": 1,
+      "老 ERP 直连 p50": "1.0 ms"
+    },
+    "bootLog": [
+      "══════════════════════════════════════════════════════════════════════════════",
+      "  ZeroAPI · 巴别塔协议 —— 零接口文档软件自组装总线（原型）",
+      "══════════════════════════════════════════════════════════════════════════════",
+      "[legacy-wms] 系统 B 已启动 → http://127.0.0.1:8412/api/goods (XML / 拼音缩写 / 分)",
+      "[modern-crm] 系统 A 已启动 → http://127.0.0.1:8411/api/received (JSON / camelCase / 元)",
+      "[modern-crm] 契约来源: contracts\\modern_crm.d.ts",
+      "✔ [系统 B] legacy-wms   http://127.0.0.1:8412",
+      "✔ [系统 A] modern-crm   http://127.0.0.1:8411",
+      "[zeroapi] 巴别塔网关已启动 → http://127.0.0.1:8410/",
+      "[zeroapi] 目标契约 ProductDTO, OrderDTO | DDL 表 erp_goods",
+      "✔ [巴别塔网关] zeroapi      http://127.0.0.1:8410",
+      "✔ 端到端自检：老 ERP(XML/拼音/分) → ZeroAPI 桥接 → ProductDTO 形态 通过",
+      "   样本: priceYuan=399.99 (源 39999 分) · createdAt=2025-06-15T15:06:40.000Z · isListed=true · 7/7 字段对齐",
+      "演示控制台  → http://127.0.0.1:8310/",
+      "老 ERP 原始 → http://127.0.0.1:8312/api/goods",
+      "CRM 已收数据 → http://127.0.0.1:8311/api/received"
+    ]
+  },
+  "cases": [
+    {
+      "suite": "① 最小边界",
+      "name": "hungarian: 0×0 矩阵返回空排列而不是抛错",
+      "ok": true,
+      "detail": "",
+      "ms": 0.2346
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "hungarian: 维度不符立刻报错（前置条件 P1 显式化）",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1078
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "hungarian: NaN 代价立刻报错，绝不静默产出错误匹配",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0302
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "hungarian: Infinity 代价同样被拒绝（避免势能运算产生 Infinity-Infinity=NaN）",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0236
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "solveIsomorphism: 空源码 × 空目标码 → 0 对，指标为 0",
+      "ok": true,
+      "detail": "",
+      "ms": 0.331
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "solveIsomorphism: 空源 → 所有目标字段进 unmappedTo",
+      "ok": true,
+      "detail": "",
+      "ms": 0.9328
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "solveIsomorphism: 空目标 → 所有源字段进 unmappedFrom",
+      "ok": true,
+      "detail": "",
+      "ms": 1.7734
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "solveIsomorphism: 单元素且完全同名 → 1 对且代价为 0",
+      "ok": true,
+      "detail": "",
+      "ms": 0.9371
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "空字符串字段名不崩溃，只是必然匹配不上",
+      "ok": true,
+      "detail": "",
+      "ms": 0.351
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "resolve: null / undefined / 空串 一律安全返回 concept=null",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1324
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "tokenize 对 null 返回空数组",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0095
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "segmentMorphemes: 空字符串覆盖度为 0 且无切分段",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1069
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "semanticSimilarity: 任一参数为空时相似度为 0（不产生\"空即相同\"的误判）",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0216
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "findPath: 自反（同一状态）返回空链且代价 0",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0176
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "applyOps: 空算子链是恒等映射",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0332
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "invertChain: 空链的逆还是空链",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0276
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "parseDdl: 空文本 → 空表列表（残缺输入必须降级而非抛错）",
+      "ok": true,
+      "detail": "",
+      "ms": 0.2748
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "parseTsInterfaces: 空文本 → 空接口列表",
+      "ok": true,
+      "detail": "",
+      "ms": 0.046
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "inferFromSamples: 空样本数组 → 空字段列表",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0315
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "buildAdt: 两侧都为空 → 空图 + 指纹稳定",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0815
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "decodeEnvelope: 空 XML → 空数组（信封解码的零输入情形）",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1124
+    },
+    {
+      "suite": "① 最小边界",
+      "name": "单字段 ADT 与 12 字段目标：不越界、不误配",
+      "ok": true,
+      "detail": "",
+      "ms": 1.559
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "合成字段全部能被词典锚定（规模用例本身的前提校验）",
+      "ok": true,
+      "detail": "",
+      "ms": 0.2106
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[规模 64×64] 产出合法排列 + 恒等配对 + 耗时归档",
+      "ok": true,
+      "detail": "",
+      "ms": 76.5943
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[规模 128×128] 匈牙利算法 O(n³) 不退化，双射仍合法",
+      "ok": true,
+      "detail": "",
+      "ms": 189.4475
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[规模] 非方阵 96×128 的补齐路径：pairs ≤ min(n,m) 且无幽灵配对",
+      "ok": true,
+      "detail": "",
+      "ms": 138.9158
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[数值极值] 匈牙利算法在 1e9 量级代价上不溢出、不产生 Infinity",
+      "ok": true,
+      "detail": "",
+      "ms": 0.2783
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[数值极值] 分→元 在 MAX_SAFE_INTEGER 上的精度损失被量化而非静默吞掉",
+      "ok": true,
+      "detail": "",
+      "ms": 0.2257
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[时间极值] epoch 0 / 2100 年 / 负时间戳全部往返恒等",
+      "ok": true,
+      "detail": "",
+      "ms": 2.5513
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[时间极值] 毫秒戳↔秒戳在 13 位量级上不丢整秒",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0483
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[标识符极值] 200 字符字段名不崩溃，且与自身相似度为 1",
+      "ok": true,
+      "detail": "",
+      "ms": 1.6178
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[寻路极值] maxOps 上限被遵守：超过上限的组合判定为不可行",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1326
+    },
+    {
+      "suite": "② 最大边界",
+      "name": "[用例自身的负对照] 未锚定的长后缀字段不会被字面相似度误配",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1543
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "逆序输入 → 映射结果逐条相同（顺序无关性）",
+      "ok": true,
+      "detail": "",
+      "ms": 1.8788
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "打乱输入 → 仍得到同一个双射（含代价一致性）",
+      "ok": true,
+      "detail": "",
+      "ms": 1.1798
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "重复语义键：两个源字段都表示\"价格\"，目标只有一个 → 恰好匹配 1 个",
+      "ok": true,
+      "detail": "",
+      "ms": 0.903
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "首尾重合：源首字段与目标末字段同概念时仍能正确配对",
+      "ok": true,
+      "detail": "",
+      "ms": 0.8607
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "两侧规模悬殊（7 vs 20）：不越界、不产生幽灵配对",
+      "ok": true,
+      "detail": "",
+      "ms": 2.4687
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "大小写/分隔符等价体（SP_MC 与 sp_mc）在同一 schema 内共存 → 不误配到同一目标",
+      "ok": true,
+      "detail": "",
+      "ms": 0.3304
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "诱饵字段：字面相似但语义不同 → 拒绝匹配（precision 纪律）",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0636
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "诱饵字段（有锚定方）：一个锚定一个不锚定时门槛抬到 0.68",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1835
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "自环陷阱：语义完全对得上，但没有算子链（object → number）→ 判定不可行",
+      "ok": true,
+      "detail": "",
+      "ms": 0.086
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "ADT 构建对列序不敏感：同一批字段不同排列 → 同一指纹",
+      "ok": true,
+      "detail": "",
+      "ms": 0.3124
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "同字段名在动态证据中类型漂移 → 采信值证据并留下 type_mismatch 痕迹",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1154
+    },
+    {
+      "suite": "③ 结构异常",
+      "name": "混合类型列（部分数值部分字符串）不被静默当作单一类型",
+      "ok": true,
+      "detail": "",
+      "ms": 0.0522
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[提前退出] 结构未变时第二次 convert 必须走缓存：重建次数保持 1",
+      "ok": true,
+      "detail": "",
+      "ms": 6.6495
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[提前退出] 幂等性：同一载荷连续 5 次转换，重建次数不随次数增长",
+      "ok": true,
+      "detail": "",
+      "ms": 4.3413
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[死循环跳出] 重建持续失败 → 必须终止并降级，且重建只尝试 1 次",
+      "ok": true,
+      "detail": "",
+      "ms": 0.6871
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[重建预算] 预算压到 1 时，预算闸门先于形状备忘录生效",
+      "ok": true,
+      "detail": "",
+      "ms": 0.4162
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[重建预算] 硬不变式 I-A：任意预算配置下重建次数 ≤ 预算",
+      "ok": true,
+      "detail": "",
+      "ms": 1.0179
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[降级语义] 无旧桥接器时降级为直通，但 degraded 标记必须为真",
+      "ok": true,
+      "detail": "",
+      "ms": 0.3695
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[降级语义] 有旧桥接器时沿用旧产物，且显式标记 usedStaleEntry",
+      "ok": true,
+      "detail": "",
+      "ms": 2.8817
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[高频振荡] 单位 cent/yuan 交替 20 次：每次都必须自愈出正确金额",
+      "ok": true,
+      "detail": "",
+      "ms": 28.3106
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[混合小数/整数列] 单位翻转后同一次请求内多行数据不得反复横跳",
+      "ok": true,
+      "detail": "",
+      "ms": 3.6509
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[结构突变] 字段改名 jg_fen→dj_fen：自愈后金额仍然正确",
+      "ok": true,
+      "detail": "",
+      "ms": 2.7973
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[结构突变] 单位线索完全丢失（改名为无意义名）→ 宁可不上线错值",
+      "ok": true,
+      "detail": "",
+      "ms": 3.3205
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[异常输入] 非对象载荷短路：不抛异常、不触发无意义重建、原样透传",
+      "ok": true,
+      "detail": "",
+      "ms": 0.3389
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[多路由隔离] 不同 route 的拓扑状态互不污染",
+      "ok": true,
+      "detail": "",
+      "ms": 2.2782
+    },
+    {
+      "suite": "④ 状态转移陷阱",
+      "name": "[指标一致性] snapshot 中 heals 与 history 长度一致",
+      "ok": true,
+      "detail": "",
+      "ms": 1.0919
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[Ground Truth] Precision / Recall / F1 全部为 1.000",
+      "ok": true,
+      "detail": "",
+      "ms": 1.9207
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[算子合成] 7 条映射的算子链逐条与人工推导一致",
+      "ok": true,
+      "detail": "",
+      "ms": 1.13
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[算子合成] 相似度与边际被量化，且同概念配对相似度显著高于门槛",
+      "ok": true,
+      "detail": "",
+      "ms": 1.0762
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[不变量闸门] 故意注入反向算子（÷100 写成 ×100）→ 必须被 L3 守恒律拦下",
+      "ok": true,
+      "detail": "",
+      "ms": 0.8447
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[不变量闸门] 故意注入有损算子 round → 因不可逆被 L2 拦下",
+      "ok": true,
+      "detail": "",
+      "ms": 0.8725
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[命名风格矩阵] abbr / full / upper / camel 四种风格全部 7/7 正确",
+      "ok": true,
+      "detail": "",
+      "ms": 6.1378
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[突变矩阵 · 改字段名] jg_fen→dj_fen：自愈后金额仍为 399.99",
+      "ok": true,
+      "detail": "",
+      "ms": 2.5458
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[突变矩阵 · 单位翻转] 分→元：桥接器把 ÷100 换成 ×1，金额不变",
+      "ok": true,
+      "detail": "",
+      "ms": 4.3495
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[突变矩阵 · 类型翻转] int→string：自动插入 parse 算子",
+      "ok": true,
+      "detail": "",
+      "ms": 3.7068
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[突变矩阵 · 新增字段] 老 ERP 新增\"品牌\"列 → 自动接入目标契约",
+      "ok": true,
+      "detail": "",
+      "ms": 3.4295
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[突变矩阵 · 恶意改名] 字段名与注释同时丢失 → 拒绝对接，且不伪造值",
+      "ok": true,
+      "detail": "",
+      "ms": 3.184
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[突变矩阵 · 删字段] 删除\"是否上架\" → 契约缺口被显式上报",
+      "ok": true,
+      "detail": "",
+      "ms": 2.5591
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[双向同构] 往返转换对全部样本逐字段还原",
+      "ok": true,
+      "detail": "",
+      "ms": 1.2982
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[产物形态] 编译出的源码包含全部 7 条映射且可读（不是压缩黑盒）",
+      "ok": true,
+      "detail": "",
+      "ms": 1.3724
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[信封编解码] XML 实体转义可逆 + 数值型文本强制转型",
+      "ok": true,
+      "detail": "",
+      "ms": 0.9334
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[信封编解码] 写出方向的 XML 必须正确转义特殊字符",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1667
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[指标] 首轮构建耗时分解全部落在合理量级",
+      "ok": true,
+      "detail": "",
+      "ms": 0.8136
+    },
+    {
+      "suite": "⑤ 匹配精度与算子合成",
+      "name": "[数值保真] 全部样本的元金额与原始分值严格守恒",
+      "ok": true,
+      "detail": "",
+      "ms": 1.2523
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "老 ERP 的线上报文确实是 XML + 拼音缩写 + 分",
+      "ok": true,
+      "detail": "",
+      "ms": 3.0053
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "直连模式（无 ZeroAPI）：现代前端收到的是老 ERP 原始形态",
+      "ok": true,
+      "detail": "",
+      "ms": 13.0118
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "首次桥接：7 条字段全部对齐，金额/时间/布尔均正确",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1494
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "编译产物可被 /api/glue 取出，且是完整可读源码",
+      "ok": true,
+      "detail": "",
+      "ms": 1.4442
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "全链路：老 ERP → 网关 → 现代 CRM 严格契约验收通过",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1221
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "CRM 侧确实存下了数据（不是网关自说自话）",
+      "ok": true,
+      "detail": "",
+      "ms": 2.5091
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "反例：手工塞一条不合契约的数据 → CRM 必须精确拒收",
+      "ok": true,
+      "detail": "",
+      "ms": 1.9173
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "[自愈基准] 8 轮连续结构突变全部重新合成，且金额逐轮守恒",
+      "ok": true,
+      "detail": "",
+      "ms": 0.9876
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "[安全边界] 价格字段名被改成乱码 → 拒绝产出任何金额，而不是猜一个数",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1251
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "[契约缺口] brand 改为必填后，CRM 精确拒收并指名缺失字段",
+      "ok": true,
+      "detail": "",
+      "ms": 0.1935
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "[反向桥接] 现代 OrderDTO → 老 ERP 字段形态 → XML 写入成功",
+      "ok": true,
+      "detail": "",
+      "ms": 1.7228
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "[时延基准] 40 次连续桥接请求：缓存命中路径无重求解，p95 落在合理量级",
+      "ok": true,
+      "detail": "",
+      "ms": 1.1053
+    },
+    {
+      "suite": "⑥ 端到端（真实 HTTP / 三进程）",
+      "name": "[并发一致性] 12 个并发请求：全部成功且结果逐字节一致",
+      "ok": true,
+      "detail": "",
+      "ms": 1.1504
+    }
+  ]
+}

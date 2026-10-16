@@ -1,0 +1,36 @@
+{
+  "name": "zeroapi",
+  "version": "0.1.0",
+  "private": false,
+  "description": "ZeroAPI · 巴别塔协议 —— 零接口文档的软件自组装总线（原型）：自动嗅探两个异构系统的数据结构，求解同构映射，热编译出转换桥接器",
+  "main": "bin/start.js",
+  "bin": {
+    "zeroapi": "bin/start.js"
+  },
+  "scripts": {
+    "start": "node bin/start.js",
+    "check": "node bin/start.js --check",
+    "test": "node tests/run.js",
+    "test:core": "node tests/run.js --core",
+    "test:e2e": "node tests/run.js --e2e",
+    "smoke": "node scripts/smoke.js",
+    "shot": "node scripts/screenshot.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "zero-api",
+    "interface-bridge",
+    "adapter",
+    "schema-matching",
+    "isomorphism",
+    "hungarian-algorithm",
+    "self-healing",
+    "integration",
+    "glue-code"
+  ],
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

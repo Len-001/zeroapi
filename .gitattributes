@@ -1,0 +1,10 @@
+# 跨平台换行归一化：仓库内存 LF，工作区按平台自动转换
+* text=auto eol=lf
+
+# 二进制产物不做换行转换
+*.png binary
+*.jpg binary
+*.ico binary
+
+# 生成产物在 diff 中折叠（验证报告体量大，逐行 diff 无意义）
+reports/verification.json -diff

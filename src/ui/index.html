@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>ZeroAPI · 巴别塔协议 — 零接口文档软件自组装总线</title>
+<link rel="stylesheet" href="/ui/style.css">
+</head>
+<body>
+<div id="err"></div>
+<pre id="dbg"></pre>
+
+<div id="app">
+  <header>
+    <div class="brand">
+      <b>ZeroAPI</b>
+      <span class="cn">巴别塔协议</span>
+      <span class="en">zero-api-contract bus</span>
+    </div>
+    <div class="chips" id="chips">
+      <span class="chip" id="c-mode">模式 <b>待机</b></span>
+      <span class="chip" id="c-pairs">匹配 <b>—</b></span>
+      <span class="chip" id="c-solve">求解 <b>—</b></span>
+      <span class="chip" id="c-lat">端到端 <b>—</b></span>
+      <span class="chip" id="c-heal">自愈 <b>—</b></span>
+      <span class="chip" id="c-fp">指纹 <b>—</b></span>
+      <span class="chip" id="c-ddl">文档覆盖 <b>—</b></span>
+    </div>
+    <div class="spacer"></div>
+    <button class="danger" id="btn-direct" title="把老 ERP 的 XML 原样丢给现代前端">① 直连（无 ZeroAPI）</button>
+    <button class="primary" id="btn-bridge" title="挂上巴别塔网关">② 启动巴别塔网关</button>
+    <button id="btn-sync" title="老 ERP → 网关 → CRM 严格契约验收">③ 全链路同步到 CRM</button>
+    <button class="ghost" id="btn-reset">重置</button>
+  </header>
+
+  <main>
+    <!-- 左：现代前端 -->
+    <section class="panel">
+      <h2><span class="dot" id="dot-modern"></span>系统 A · 现代 CRM 前端
+        <span class="sub" id="sub-modern">ProductDTO / JSON / 元</span></h2>
+      <div class="body" id="modernBody">
+        <div class="mode-banner" id="modeBanner">
+          <span class="tag">IDLE</span><span>尚未发起请求。点上方「① 直连」看看不挂网关会发生什么。</span>
+        </div>
+        <div id="productList"></div>
+      </div>
+    </section>
+
+    <!-- 中：ZeroAPI 拓扑 -->
+    <section class="panel">
+      <h2><span class="dot live"></span>ZeroAPI · 同构函子求解与热插拔桥接
+        <span class="sub" id="sub-topo">ADT Graph · Neuro-Symbolic Solver</span></h2>
+      <div id="topoWrap">
+        <canvas id="topo"></canvas>
+        <div class="legend">
+          <span><i style="background:#34d399"></i>identity 直通</span>
+          <span><i style="background:#fbbf24"></i>单位换算</span>
+          <span><i style="background:#22d3ee"></i>编解码</span>
+          <span><i style="background:#a78bfa"></i>类型提升</span>
+          <span><i style="background:#f87171"></i>结构突变</span>
+        </div>
+      </div>
+      <div class="eventlog" id="eventlog"></div>
+    </section>
+
+    <!-- 右：老 ERP -->
+    <section class="panel">
+      <h2><span class="dot" id="dot-legacy"></span>系统 B · 遗留仓库管理系统
+        <span class="sub" id="sub-legacy">XML / 拼音缩写 / 分</span></h2>
+      <div class="body">
+        <div class="kv"><span>当前表结构（实时）</span><span class="v" id="k-schema">—</span></div>
+        <div class="kv"><span>DDL 文档覆盖度</span><span class="v" id="k-ddl">—</span></div>
+        <div class="kv"><span>行数</span><span class="v" id="k-rows">—</span></div>
+        <div style="margin:9px 0 4px;font-size:11px;color:var(--muted)">线上原始报文 (text/xml)</div>
+        <pre class="xml" id="xmlView">（尚未拉取）</pre>
+        <div style="margin-top:9px;font-size:11px;color:var(--muted)">协议突变注入器 · 当着评委的面把线上结构改乱</div>
+        <div class="chaos-grid">
+          <button class="danger" data-chaos="rename" data-args='{"from":"jg_fen","to":"dj_fen"}'>改字段名 jg_fen→dj_fen</button>
+          <button class="danger" data-chaos="restyle" data-args='{"mode":"full"}'>命名风格→全拼</button>
+          <button class="danger" data-chaos="unitflip" data-args='{"field":"jg_fen","unit":"yuan"}'>单位 分→元</button>
+          <button class="danger" data-chaos="typeflip" data-args='{"field":"jg_fen","to":"string"}'>类型 int→string</button>
+          <button class="danger" data-chaos="addfield" data-args='{"name":"pp","comment":"品牌","value":"Logitech"}'>新增字段 品牌</button>
+          <button class="danger" data-chaos="hostile" data-args='{"field":"sp_mc"}'>恶意改名（乱码）</button>
+          <button class="danger" data-chaos="dropfield" data-args='{"name":"sf_sx"}'>删除字段 是否上架</button>
+          <button id="btn-contract-strict">收紧契约 brand 必填</button>
+        </div>
+        <div class="hint">每次突变后**再点一次 ②/③**，观察中间面板在毫秒级重新求解并热替换桥接器，前端全程零改动。</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 底：自动合成的胶水代码 -->
+  <footer class="panel">
+    <h2><span class="dot" id="dot-glue"></span>ZeroAPI 自动合成的桥接器源码
+      <span class="sub" id="sub-glue">0 行人手编写</span></h2>
+    <div class="body"><pre class="glue" id="glueView">（求解完成后自动生成）</pre></div>
+  </footer>
+</div>
+
+<script src="/ui/graph.js"></script>
+<script src="/ui/app.js"></script>
+</body>
+</html>
