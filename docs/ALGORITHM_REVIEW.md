@@ -52,7 +52,7 @@
 | ④ | `p[1]=0` | 1 | — | — | — | — | `p[j0]=0` → 退出 do-while，配成 `(1,1)` |
 | ⑤ | — | — | — | — | — | — | `i=2`：`minv[2]` 初始 `Infinity`；`cost[2][2]-u[2]-v[2] = 1`，但 `minv[1]` 仍为 `Infinity` |
 | ⑥ | — | — | — | — | — | — | 所有 `j` 都被 `used` 或 `minv[j]=Infinity` ⇒ `j1 === -1`，`delta=Infinity` |
-| ⑦ | — | — | — | — | `Infinity` | `-Infinity` | **若继续执行**：`u[p[j]] += Infinity`、`v[j] -= Infinity` ⇒ 下一轮 `cur = Infinity - Infinity` = **NaN**，`minv` 被 NaN 污染，第 82 行 `if (minv[j] < delta)` 恒为 false ⇒ 在第 91 行 `j1 === -1` 才暴露 |
+| ⑦ | — | — | — | — | `Infinity` | `-Infinity` | **若继续执行**：`u[p[j]] += Infinity`、`v[j] -= Infinity` ⇒ 下一轮 `cur = Infinity - Infinity` = **NaN**，`minv` 被 NaN 污染，第 89 行 `if (minv[j] < delta)` 恒为 false ⇒ 在第 91 行 `j1 === -1` 才暴露 |
 
 **断言失效点**：`src/core/solver.js:91`（`if (j1 === -1) throw ...`）—— 此时错误已经离现场很远，
 错误信息只会说"数值退化"，排查成本极高。
@@ -60,7 +60,7 @@
 ### 步骤 4 · 最小侵入修复
 
 ```js
-// src/core/solver.js:62-69 —— 在进入主循环之前就把违反 P1 的输入挡掉
+// src/core/solver.js:59-67 —— 在进入主循环之前就把违反 P1 的输入挡掉
 for (let i = 0; i < n; i++) {
   for (let j = 0; j < n; j++) {
     const v = cost[i][j];
@@ -124,7 +124,7 @@ for (let i = 0; i < n; i++) {
 
 **若换成贪心**：行 0 与行 1 都会各自去抢列 0，最终要么产生**非单射**（同一目标被写两次），
 要么依赖遍历顺序随机决定谁胜出 —— 这正是 Q1 存在的意义。
-第 227-234 行的单射自检会在结果被使用前抛错，属于"防御性断言"，正常路径下不会触发。
+第 226-235 行的单射自检会在结果被使用前抛错，属于"防御性断言"，正常路径下不会触发。
 
 ### 步骤 4 · 最小侵入修复
 
@@ -135,7 +135,7 @@ for (let i = 0; i < n; i++) {
    不承担最优性责任。
 
 时间复杂度：`O(|A| · |B| · (寻路)) + O(n³)`，其中 `n = max(|A|, |B|)`。
-`findPath` 加了记忆化（`src/core/operators.js:129`），把 `n²` 次重复寻路降为查表。
+`findPath` 加了记忆化（`src/core/operators.js:132`），把 `n²` 次重复寻路降为查表。
 
 ---
 
